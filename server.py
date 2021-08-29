@@ -17,10 +17,11 @@ from pygments.formatters.html import HtmlFormatter
 from pygments.lexers import guess_lexer_for_filename
 
 
-def render_gist_js(code):
-    template = Template("document.write( '{{ code|tojson }}' );")
+def render_gist_js(code,path):
+    template = Template("""script = document.querySelector('script[src$="{{ path }}"]')
+    script.insertAdjacentHTML( 'afterend','{{ code|tojson }}' );""")
 
-    return template.render(code=code)
+    return template.render(code=code,path=path)
 
 
 class HTTPRequestHandler(BaseHTTPRequestHandler):
@@ -60,14 +61,12 @@ class HTTPRequestHandler(BaseHTTPRequestHandler):
 
             result = highlighted_code + f"<style> {css}</style>"
 
-            js_rendered = render_gist_js(result)
+            js_rendered = render_gist_js(result,self.path)
 
             self.send_response(200)
             self.send_header('Content-Type', 'text/html')
             self.end_headers()
             self.wfile.write(js_rendered.encode('utf8'))
-
-
 
         else:
             self.send_response(404)
