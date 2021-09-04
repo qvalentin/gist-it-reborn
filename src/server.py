@@ -19,9 +19,9 @@ from pygments.lexers import guess_lexer_for_filename
 
 def render_gist_js(code, path):
     template = Template("""script = document.querySelector('script[src$="{{ path }}"]')
-    script.insertAdjacentHTML( 'afterend','{{ code|tojson }}' );""")
+    script.insertAdjacentHTML( 'afterend',{{ code|tojson }} );""")
 
-    return template.render(code=code, path=path)
+    return template.render(code=str(code), path=path)
 
 
 class HTTPRequestHandler(BaseHTTPRequestHandler):
