@@ -78,8 +78,8 @@ def main():
     parser = argparse.ArgumentParser(description='HTTP Server')
     args = parser.parse_args()
 
-    server = HTTPServer(("localhost", 4876), HTTPRequestHandler)
-    print('HTTP Server Running...........')
+    server = HTTPServer(("0.0.0.0", 4876), HTTPRequestHandler)
+    print('HTTP Server Running on localhost:4876')
     server.serve_forever()
 
 
